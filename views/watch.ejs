@@ -1,0 +1,104 @@
+<%- include('partials/head') %>
+<%- include('partials/header') %>
+<% const multiSeason = seasons.length > 1; %>
+
+<main class="container page-pad">
+  <nav class="breadcrumbs">
+    <a href="/">Bosh sahifa</a> / <a href="/anime/<%= anime.slug %>"><%= anime.title %></a> / <span><%= h.episodeLabel(episode, multiSeason) %></span>
+  </nav>
+
+  <div class="watch-grid">
+    <section class="watch-main">
+      <div class="player" data-player
+           data-watch-key="<%= anime.slug %>:<%= episode.season %>:<%= episode.number %>"
+           data-slug="<%= anime.slug %>"
+           data-next-url="<%= next ? h.episodeUrl(anime.slug, next) : '' %>">
+        <% if (episode.source_type === 'embed') { %>
+          <iframe src="<%= episode.source %>" title="<%= anime.title %> — <%= h.episodeLabel(episode, multiSeason) %>"
+                  allow="autoplay; fullscreen; picture-in-picture; encrypted-media" allowfullscreen
+                  referrerpolicy="strict-origin-when-cross-origin"></iframe>
+        <% } else if (h.isHls(episode.source)) { %>
+          <video controls playsinline preload="metadata" poster="<%= h.bannerUrl(anime) %>" data-hls-src="<%= episode.source %>"></video>
+        <% } else { %>
+          <video controls playsinline preload="metadata" poster="<%= h.bannerUrl(anime) %>" src="<%= episode.source %>"></video>
+        <% } %>
+      </div>
+
+      <div class="player-bar">
+        <div class="player-title">
+          <span class="muted">Siz tomosha qilyapsiz</span>
+          <strong><%= h.episodeLabel(episode, multiSeason) %><% if (episode.title) { %>: <%= episode.title %><% } %></strong>
+        </div>
+        <div class="player-actions">
+          <% if (episode.source_type !== 'embed' && next) { %>
+          <label class="toggle">
+            <input type="checkbox" data-autonext>
+            <span class="toggle-track"></span>
+            Avto-keyingi
+          </label>
+          <% } %>
+          <% if (prev) { %>
+            <a class="btn btn-ghost btn-sm" href="<%= h.episodeUrl(anime.slug, prev) %>"><%- h.icon('chevron-left') %> Oldingi</a>
+          <% } %>
+          <% if (next) { %>
+            <a class="btn btn-primary btn-sm" href="<%= h.episodeUrl(anime.slug, next) %>">Keyingi <%- h.icon('chevron-right') %></a>
+          <% } %>
+        </div>
+      </div>
+      <p class="dub-note">Ovozlashtirish: <b>UzAniDub</b> jamoasi · Oʻzbek tilida</p>
+
+      <article class="watch-info">
+        <a href="/anime/<%= anime.slug %>" class="watch-info-poster"><img src="<%= h.posterUrl(anime) %>" alt="<%= anime.title %>"></a>
+        <div>
+          <h1><a href="/anime/<%= anime.slug %>"><%= anime.title %></a></h1>
+          <%- include('partials/badges', { anime }) %>
+          <% if (anime.description) { %><p class="watch-desc"><%= anime.description %></p><% } %>
+          <a class="section-link" href="/anime/<%= anime.slug %>">Anime haqida batafsil</a>
+        </div>
+      </article>
+    </section>
+
+    <aside class="episode-panel" data-seasons>
+      <div class="episode-panel-head">
+        <% if (multiSeason) { %>
+          <select class="season-select" data-season-select aria-label="Faslni tanlang">
+            <% seasons.forEach(({ season, episodes }) => { %>
+              <option value="<%= season %>" <%= season === episode.season ? 'selected' : '' %>><%= h.seasonLabel(season) %> · <%= episodes.length %> qism</option>
+            <% }) %>
+          </select>
+        <% } else { %>
+          <h2>Qismlar</h2>
+          <span class="muted"><%= episodes.length %> ta</span>
+        <% } %>
+      </div>
+      <% seasons.forEach(({ season, episodes }) => { %>
+      <div class="episode-list season-panel" data-season-panel="<%= season %>" data-episode-list>
+        <% if (multiSeason) { %><h3 class="season-heading"><%= h.seasonLabel(season) %></h3><% } %>
+        <% episodes.forEach((e) => { %>
+          <a href="<%= h.episodeUrl(anime.slug, e) %>"
+             class="episode-row <%= e.id === episode.id ? 'is-current' : '' %>"
+             data-watch-key="<%= anime.slug %>:<%= e.season %>:<%= e.number %>">
+            <span class="episode-num"><%= e.number %></span>
+            <span class="episode-row-title"><%= e.title || h.episodeLabel(e) %></span>
+            <% if (e.id === episode.id) { %><span class="now-label">Hozir</span><% } %>
+          </a>
+        <% }) %>
+      </div>
+      <% }) %>
+    </aside>
+  </div>
+
+  <% if (others.length) { %>
+  <section class="section">
+    <div class="section-head"><h2>Sizga yoqishi mumkin</h2></div>
+    <div class="card-grid">
+      <% others.forEach((a) => { %><%- include('partials/anime-card', { anime: a }) %><% }) %>
+    </div>
+  </section>
+  <% } %>
+</main>
+
+<% if (episode.source_type !== 'embed' && h.isHls(episode.source)) { %>
+<script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.13/dist/hls.min.js" defer></script>
+<% } %>
+<%- include('partials/footer') %>

@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="uz" data-accent="<%= locals.accent || 'red' %>">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title><%= locals.title ? `${locals.title} — UzAniDub` : 'UzAniDub — animelar oʻzbek tilida' %></title>
+  <meta name="description" content="<%= (locals.metaDescription || 'UzAniDub — sevimli animelaringizni oʻzbek tilida tomosha qiling.').slice(0, 160) %>">
+  <meta name="theme-color" content="#0f0f10">
+  <link rel="icon" href="/img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css?v=<%= assetVersion %>">
+</head>
+<body class="<%= locals.bodyClass || '' %>">

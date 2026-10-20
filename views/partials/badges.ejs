@@ -1,0 +1,9 @@
+<div class="badges">
+  <% if (anime.age_rating) { %><span class="badge badge-age"><%= anime.age_rating %></span><% } %>
+  <span class="badge badge-hd">HD</span>
+  <span class="badge badge-dub">UZ</span>
+  <span class="badge-text"><%= h.typeLabel(anime.type) %></span>
+  <% if (anime.year) { %><span class="badge-text"><%= anime.year %></span><% } %>
+  <% if (anime.season_count > 1) { %><span class="badge-text"><%= anime.season_count %> fasl</span><% } %>
+  <span class="badge-text"><%= h.episodeProgress(anime) %> qism</span>
+</div>

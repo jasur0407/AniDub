@@ -1,0 +1,97 @@
+<%- include('partials/head') %>
+<%- include('partials/header') %>
+
+<main>
+  <section class="detail-hero">
+    <img class="detail-bg" src="<%= h.bannerUrl(anime) %>" alt="">
+    <div class="container detail-inner">
+      <div class="detail-poster">
+        <img src="<%= h.posterUrl(anime) %>" alt="<%= anime.title %>">
+      </div>
+      <div class="detail-info">
+        <nav class="breadcrumbs"><a href="/">Bosh sahifa</a> / <span><%= anime.title %></span></nav>
+        <h1><%= anime.title %></h1>
+        <% if (anime.title_alt) { %><p class="hero-alt"><%= anime.title_alt %></p><% } %>
+        <%- include('partials/badges', { anime }) %>
+        <% if (anime.description) { %>
+          <div class="description" data-clamp>
+            <p><%= anime.description %></p>
+          </div>
+          <button type="button" class="link-btn" data-clamp-toggle hidden>Batafsil</button>
+        <% } %>
+        <div class="hero-actions">
+          <% if (episodes.length) { %>
+            <a class="btn btn-primary btn-lg" href="<%= h.episodeUrl(anime.slug, episodes[0]) %>"><%- h.icon('play') %> Tomosha qilish</a>
+            <a class="btn btn-ghost btn-lg" href="#" data-continue="<%= anime.slug %>" hidden>Davom ettirish</a>
+          <% } else { %>
+            <span class="btn btn-ghost btn-lg is-disabled">Qismlar tez orada</span>
+          <% } %>
+        </div>
+        <dl class="meta-grid">
+          <div><dt>Turi</dt><dd><%= h.typeLabel(anime.type) %></dd></div>
+          <% if (anime.studio) { %><div><dt>Studiya</dt><dd><%= anime.studio %></dd></div><% } %>
+          <% if (anime.year) { %><div><dt>Yil</dt><dd><%= anime.year %></dd></div><% } %>
+          <div><dt>Holati</dt><dd><span class="status status-<%= anime.status %>"><%= h.statusLabel(anime.status) %></span></dd></div>
+          <div><dt>Qismlar</dt><dd><%= h.episodeProgress(anime) %></dd></div>
+          <div><dt>Tili</dt><dd>Oʻzbek tilida</dd></div>
+          <div><dt>Koʻrishlar</dt><dd><%= h.formatNumber(anime.views) %></dd></div>
+          <% if (anime.genreList.length) { %>
+          <div class="meta-wide"><dt>Janrlar</dt><dd class="chips">
+            <% anime.genreList.forEach((g) => { %><span class="chip chip-sm"><%= g %></span><% }) %>
+          </dd></div>
+          <% } %>
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <div class="container page-grid">
+    <div class="main-col">
+      <section class="section" data-seasons>
+        <div class="section-head">
+          <h2>Qismlar <span class="count"><%= episodes.length %></span></h2>
+          <% if (seasons.length > 1) { %>
+            <select class="season-select" data-season-select aria-label="Faslni tanlang">
+              <% seasons.forEach(({ season, episodes }) => { %>
+                <option value="<%= season %>"><%= h.seasonLabel(season) %> · <%= episodes.length %> qism</option>
+              <% }) %>
+            </select>
+          <% } %>
+        </div>
+        <% if (episodes.length) { %>
+          <% seasons.forEach(({ season, episodes }) => { %>
+          <div class="season-panel" data-season-panel="<%= season %>">
+            <% if (seasons.length > 1) { %><h3 class="season-heading"><%= h.seasonLabel(season) %></h3><% } %>
+            <div class="episode-grid">
+              <% episodes.forEach((e) => { %>
+                <a class="episode-tile" href="<%= h.episodeUrl(anime.slug, e) %>" data-watch-key="<%= anime.slug %>:<%= e.season %>:<%= e.number %>">
+                  <span class="episode-num"><%= e.number %></span>
+                  <span class="episode-meta">
+                    <strong><%= e.title || h.episodeLabel(e) %></strong>
+                    <small><%= h.formatDate(e.created_at) %></small>
+                  </span>
+                  <%- h.icon('play', 'episode-play') %>
+                </a>
+              <% }) %>
+            </div>
+          </div>
+          <% }) %>
+        <% } else { %>
+          <div class="empty">Bu animening qismlari hali joylanmagan.</div>
+        <% } %>
+      </section>
+
+      <% if (others.length) { %>
+      <section class="section">
+        <div class="section-head"><h2>Boshqa animelar</h2></div>
+        <div class="card-grid">
+          <% others.forEach((a) => { %><%- include('partials/anime-card', { anime: a }) %><% }) %>
+        </div>
+      </section>
+      <% } %>
+    </div>
+    <%- include('partials/sidebar', { top: null }) %>
+  </div>
+</main>
+
+<%- include('partials/footer') %>

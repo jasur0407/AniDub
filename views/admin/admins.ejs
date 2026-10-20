@@ -1,0 +1,40 @@
+<%- include('../partials/admin-top') %>
+
+<div class="form-grid">
+  <section class="card form-card">
+    <h2>Adminlar</h2>
+    <ul class="admin-users">
+      <% admins.forEach((a) => { %>
+      <li>
+        <span class="avatar"><%= a.username.slice(0, 1).toUpperCase() %></span>
+        <span class="admin-user-name"><%= a.username %><small>Qoʻshilgan: <%= h.formatDate(a.created_at) %></small></span>
+        <% if (a.id === admin.id) { %>
+          <span class="badge badge-hd">Siz</span>
+        <% } else { %>
+          <form method="post" action="/admin/admins/<%= a.id %>/delete" data-confirm="“<%= a.username %>” adminlikdan oʻchirilsinmi?">
+            <button class="icon-btn icon-btn-danger" type="submit" title="Oʻchirish"><%- h.icon('trash') %></button>
+          </form>
+        <% } %>
+      </li>
+      <% }) %>
+    </ul>
+
+    <h3>Yangi admin qoʻshish</h3>
+    <form method="post" action="/admin/admins" class="stack">
+      <label class="field"><span>Login</span><input type="text" name="username" required minlength="3" maxlength="40" pattern="[a-zA-Z0-9_.\-]+" autocomplete="off"></label>
+      <label class="field"><span>Parol <small>(kamida 8 belgi)</small></span><input type="password" name="password" required minlength="8" autocomplete="new-password"></label>
+      <button class="btn btn-primary" type="submit">Qoʻshish</button>
+    </form>
+  </section>
+
+  <section class="card form-card">
+    <h2>Parolni oʻzgartirish</h2>
+    <form method="post" action="/admin/password" class="stack">
+      <label class="field"><span>Joriy parol</span><input type="password" name="current_password" required autocomplete="current-password"></label>
+      <label class="field"><span>Yangi parol</span><input type="password" name="new_password" required minlength="8" autocomplete="new-password"></label>
+      <button class="btn btn-primary" type="submit">Parolni yangilash</button>
+    </form>
+  </section>
+</div>
+
+<%- include('../partials/admin-bottom') %>

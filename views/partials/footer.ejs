@@ -1,0 +1,20 @@
+<footer class="site-footer">
+  <div class="container footer-inner">
+    <div class="footer-brand">
+      <a href="/" class="logo"><%- include('brand', { size: 30 }) %></a>
+      <p>Sevimli animelaringiz — oʻzbek tilida, sifatli ovozlashtirish bilan.</p>
+    </div>
+    <nav class="footer-links">
+      <a href="/">Bosh sahifa</a>
+      <a href="/yangi-qismlar">Yangi qismlar</a>
+      <a href="/admin">Admin</a>
+    </nav>
+  </div>
+  <div class="container footer-bottom">
+    <span>© <%= new Date().getFullYear() %> UzAniDub. Barcha huquqlar himoyalangan.</span>
+    <span class="muted">Animelar mualliflik huquqi ularning egalariga tegishli.</span>
+  </div>
+</footer>
+<script src="/js/main.js?v=<%= assetVersion %>" defer></script>
+</body>
+</html>

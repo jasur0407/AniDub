@@ -1,0 +1,54 @@
+<div class="field-row field-row-3">
+  <label class="field">
+    <span>Fasl *</span>
+    <select name="season" data-season-input data-next-numbers="<%= JSON.stringify(nextNumbers) %>" <%= locals.episode ? 'data-editing' : '' %>>
+      <% seasons.forEach(({ season, episodes }) => { %>
+        <option value="<%= season %>" <%= Number(values.season) === season ? 'selected' : '' %>><%= h.seasonLabel(season) %> (<%= episodes %> qism)</option>
+      <% }) %>
+      <option value="<%= newSeason %>" <%= Number(values.season) === newSeason ? 'selected' : '' %>><%= seasons.length ? `Yangi fasl: ${h.seasonLabel(newSeason)}` : h.seasonLabel(newSeason) %></option>
+    </select>
+  </label>
+  <label class="field">
+    <span>Qism raqami *</span>
+    <input type="number" name="number" min="1" value="<%= values.number || '' %>" required data-number-input>
+  </label>
+  <label class="field">
+    <span>Qism nomi <small>(ixtiyoriy)</small></span>
+    <input type="text" name="title" value="<%= values.title || '' %>" maxlength="200" placeholder="Masalan: Sayohat boshlanishi">
+  </label>
+</div>
+
+<fieldset class="source-tabs" data-source-tabs>
+  <legend>Video manbasi</legend>
+  <label><input type="radio" name="source_type" value="file" <%= values.source_type === 'file' ? 'checked' : '' %>> <span>Fayl yuklash</span></label>
+  <label><input type="radio" name="source_type" value="url" <%= values.source_type === 'url' ? 'checked' : '' %>> <span>Video havola</span></label>
+  <label><input type="radio" name="source_type" value="embed" <%= values.source_type === 'embed' ? 'checked' : '' %>> <span>Embed (iframe)</span></label>
+</fieldset>
+
+<div class="source-panel" data-source-panel="file">
+  <label class="dropzone" data-dropzone>
+        <strong data-dropzone-label><%= locals.episode && episode.source_type === 'file' ? 'Yangi fayl tanlang (ixtiyoriy)' : 'Video faylni tanlang yoki shu yerga tashlang' %></strong>
+    <small class="muted">MP4, WebM, M4V<%= conversionAvailable ? ' yoki MKV' : '' %> · maksimal <%= MAX_VIDEO_MB >= 1024 ? `${(MAX_VIDEO_MB / 1024).toFixed(1).replace('.0', '')} GB` : `${MAX_VIDEO_MB} MB` %></small>
+    <input type="file" name="video" accept="<%= VIDEO_ACCEPT %>">
+  </label>
+  <% if (conversionAvailable) { %>
+    <p class="muted small">MKV fayllar serverda avtomatik MP4 ga aylantiriladi: oʻzbekcha audio yoʻlagi tanlanadi, subtitrlar olib tashlanadi. Konvertatsiya tugaguncha qism saytda koʻrinmaydi.</p>
+  <% } %>
+  <% if (locals.episode && episode.source_type === 'file') { %>
+    <p class="muted small">Joriy fayl: <a href="<%= episode.source %>" target="_blank" rel="noopener"><%= episode.source.split('/').pop() %></a></p>
+  <% } %>
+</div>
+<div class="source-panel" data-source-panel="url">
+  <label class="field">
+    <span>Toʻgʻridan-toʻgʻri video havolasi</span>
+    <input type="url" name="source_url" value="<%= values.source_type === 'url' ? (values.source_url || '') : '' %>" placeholder="https://.../episode-1.mp4 yoki .m3u8" data-source-url="url">
+  </label>
+  <p class="muted small">.mp4, .webm yoki HLS (.m3u8) havolalari saytning oʻz pleyerida ochiladi.</p>
+</div>
+<div class="source-panel" data-source-panel="embed">
+  <label class="field">
+    <span>Embed havolasi yoki &lt;iframe&gt; kodi</span>
+    <textarea name="embed_code" rows="3" placeholder="https://www.youtube.com/embed/... yoki <iframe src=...>" data-source-url="embed"><%= values.source_type === 'embed' ? (values.source_url || '') : '' %></textarea>
+  </label>
+  <p class="muted small">YouTube, OK.ru, VK Video, Google Drive va boshqa xizmatlarning embed kodi. YouTube oddiy havolasi avtomatik embedga aylantiriladi.</p>
+</div>

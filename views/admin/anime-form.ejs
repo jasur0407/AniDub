@@ -1,0 +1,104 @@
+<%- include('../partials/admin-top') %>
+
+<form class="admin-form" method="post" enctype="multipart/form-data"
+      action="<%= anime ? `/admin/anime/${anime.id}/edit` : '/admin/anime/new' %>" data-upload-form>
+  <div class="form-grid">
+    <section class="card form-card">
+      <h2>Asosiy maʼlumotlar</h2>
+      <label class="field">
+        <span>Nomi *</span>
+        <input type="text" name="title" value="<%= values.title || '' %>" required maxlength="200" placeholder="Masalan: Frieren">
+      </label>
+      <label class="field">
+        <span>Muqobil nomi <small>(yaponcha / inglizcha)</small></span>
+        <input type="text" name="title_alt" value="<%= values.title_alt || '' %>" maxlength="200" placeholder="Sousou no Frieren">
+      </label>
+      <label class="field">
+        <span>Tavsif</span>
+        <textarea name="description" rows="6" maxlength="5000" placeholder="Anime syujeti haqida qisqacha..."><%= values.description || '' %></textarea>
+      </label>
+      <label class="field">
+        <span>Janrlar <small>(vergul bilan ajrating)</small></span>
+        <input type="text" name="genres" value="<%= values.genres || '' %>" placeholder="Fentezi, Sarguzasht, Drama" data-genre-input>
+      </label>
+      <div class="chips genre-suggest">
+        <% GENRE_SUGGESTIONS.forEach((g) => { %><button type="button" class="chip chip-sm" data-genre="<%= g %>">+ <%= g %></button><% }) %>
+      </div>
+
+      <div class="field-row">
+        <label class="field">
+          <span>Turi</span>
+          <select name="type">
+            <% Object.entries(TYPES).forEach(([key, label]) => { %><option value="<%= key %>" <%= values.type === key ? 'selected' : '' %>><%= label %></option><% }) %>
+          </select>
+        </label>
+        <label class="field">
+          <span>Holati</span>
+          <select name="status">
+            <% Object.entries(STATUS).forEach(([key, label]) => { %><option value="<%= key %>" <%= values.status === key ? 'selected' : '' %>><%= label %></option><% }) %>
+          </select>
+        </label>
+      </div>
+      <div class="field-row">
+        <label class="field">
+          <span>Yil</span>
+          <input type="number" name="year" min="1950" max="2100" value="<%= values.year || '' %>">
+        </label>
+        <label class="field">
+          <span>Jami qismlar <small>(rejada)</small></span>
+          <input type="number" name="total_episodes" min="1" value="<%= values.total_episodes || '' %>" placeholder="12">
+        </label>
+      </div>
+      <div class="field-row">
+        <label class="field">
+          <span>Yosh chegarasi</span>
+          <select name="age_rating">
+            <option value="">—</option>
+            <% AGE_RATINGS.forEach((r) => { %><option value="<%= r %>" <%= values.age_rating === r ? 'selected' : '' %>><%= r %></option><% }) %>
+          </select>
+        </label>
+        <label class="field">
+          <span>Studiya</span>
+          <input type="text" name="studio" value="<%= values.studio || '' %>" maxlength="120" placeholder="Madhouse">
+        </label>
+      </div>
+      <label class="checkbox">
+        <input type="checkbox" name="featured" value="1" <%= values.featured ? 'checked' : '' %>>
+        <span>Bosh sahifadagi katta bannerda koʻrsatish</span>
+      </label>
+    </section>
+
+    <section class="card form-card">
+      <h2>Rasmlar</h2>
+      <% [['poster', 'Poster', 'Vertikal rasm, masalan 400×580'], ['banner', 'Banner', 'Keng rasm, masalan 1600×640']].forEach(([field, label, hint]) => { %>
+        <% const current = values[field]; %>
+        <div class="image-field">
+          <div class="image-preview image-preview-<%= field %>">
+            <img src="<%= current || (anime ? (field === 'poster' ? h.posterUrl(anime) : h.bannerUrl(anime)) : '/img/placeholder.svg') %>" alt="" data-preview="<%= field %>">
+          </div>
+          <div class="image-inputs">
+            <strong><%= label %></strong>
+            <small class="muted"><%= hint %></small>
+            <label class="file-btn">
+              Rasm yuklash
+              <input type="file" name="<%= field %>" accept="<%= IMAGE_ACCEPT %>" data-preview-input="<%= field %>">
+            </label>
+            <input type="url" name="<%= field %>_url" placeholder="yoki rasm havolasi: https://..." value="<%= current && /^https?:/.test(current) ? current : '' %>">
+            <% if (current) { %>
+              <label class="checkbox checkbox-sm"><input type="checkbox" name="remove_<%= field %>" value="1"> <span>Rasmni olib tashlash</span></label>
+            <% } %>
+          </div>
+        </div>
+      <% }) %>
+      <p class="muted small">Rasm boʻlmasa, sayt anime nomi bilan chiroyli muqova avtomatik yaratadi.</p>
+    </section>
+  </div>
+
+  <div class="form-actions">
+    <a class="btn btn-ghost" href="/admin">Bekor qilish</a>
+    <button class="btn btn-primary" type="submit"><%= anime ? 'Saqlash' : 'Anime qoʻshish' %></button>
+  </div>
+  <div class="upload-progress" data-progress hidden><div class="progress"><span data-progress-bar></span></div><small data-progress-text></small></div>
+</form>
+
+<%- include('../partials/admin-bottom') %>

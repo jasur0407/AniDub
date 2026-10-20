@@ -1,0 +1,33 @@
+<%- include('head') %>
+<div class="admin-shell">
+  <aside class="admin-sidebar" data-nav>
+    <a href="/admin" class="logo">
+      <%- include('brand', { size: 30 }) %>
+      <span class="logo-flag">Admin</span>
+    </a>
+    <nav class="admin-nav">
+      <a href="/admin" class="<%= currentPath === '/admin' ? 'active' : '' %>">Boshqaruv paneli</a>
+      <a href="/admin/anime/new" class="<%= currentPath === '/admin/anime/new' ? 'active' : '' %>">Yangi anime</a>
+      <a href="/admin/admins" class="<%= currentPath === '/admin/admins' ? 'active' : '' %>">Adminlar</a>
+      <a href="/admin/settings" class="<%= currentPath === '/admin/settings' ? 'active' : '' %>">Sozlamalar</a>
+      <a href="/" target="_blank" rel="noopener">Saytni koʻrish</a>
+    </nav>
+    <div class="admin-user">
+      <span class="avatar"><%= admin.username.slice(0, 1).toUpperCase() %></span>
+      <span class="admin-user-name"><%= admin.username %><small>Administrator</small></span>
+      <form method="post" action="/admin/logout">
+        <button class="icon-btn" type="submit" title="Chiqish" aria-label="Chiqish"><%- h.icon('logout') %></button>
+      </form>
+    </div>
+  </aside>
+  <div class="admin-main">
+    <header class="admin-topbar">
+      <button class="icon-btn nav-toggle" type="button" aria-label="Menyu" aria-expanded="false" data-nav-toggle><%- h.icon('menu') %></button>
+      <h1><%= title %></h1>
+    </header>
+    <% if (locals.flash) { %><div class="alert alert-<%= flash.type %>" data-flash><%= flash.text %></div><% } %>
+    <% if (locals.errors && errors.length) { %>
+      <div class="alert alert-error">
+        <% errors.forEach((e) => { %><div><%= e %></div><% }) %>
+      </div>
+    <% } %>

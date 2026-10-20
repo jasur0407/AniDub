@@ -1,0 +1,26 @@
+<aside class="sidebar">
+  <% if (locals.top && top.length) { %>
+  <section class="panel">
+    <h2 class="panel-title">Top animelar</h2>
+    <ol class="top-list">
+      <% top.forEach((a, i) => { %>
+      <li>
+        <a href="/anime/<%= a.slug %>" class="top-item">
+          <span class="top-rank rank-<%= i + 1 %>"><%= String(i + 1).padStart(2, '0') %></span>
+          <img src="<%= h.posterUrl(a) %>" alt="" loading="lazy">
+          <span class="top-info">
+            <strong><%= a.title %></strong>
+            <small><%= h.typeLabel(a.type) %> · <%= a.episode_count %> qism · <%= h.formatNumber(a.views) %> koʻrish</small>
+          </span>
+        </a>
+      </li>
+      <% }) %>
+    </ol>
+  </section>
+  <% } %>
+
+  <section class="panel panel-cta">
+    <h2 class="panel-title">Oʻzbek tilida</h2>
+    <p>Barcha animelar jamoamiz tomonidan oʻzbek tiliga ovozlashtirilgan. Yangi qismlar muntazam qoʻshib boriladi!</p>
+  </section>
+</aside>

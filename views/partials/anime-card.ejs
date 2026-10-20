@@ -1,0 +1,13 @@
+<a class="anime-card" href="/anime/<%= anime.slug %>">
+  <div class="poster">
+    <img src="<%= h.posterUrl(anime) %>" alt="<%= anime.title %>" loading="lazy">
+    <span class="poster-badge poster-badge-tl">UZ</span>
+    <% if (anime.age_rating) { %><span class="poster-badge poster-badge-tr"><%= anime.age_rating %></span><% } %>
+    <span class="poster-eps"><%= h.episodeProgress(anime) %></span>
+    <span class="poster-play"><%- h.icon('play') %></span>
+  </div>
+  <div class="card-body">
+    <h3 class="card-title"><%= anime.title %></h3>
+    <p class="card-meta"><%= h.typeLabel(anime.type) %><% if (anime.season_count > 1) { %> · <%= anime.season_count %> fasl<% } else if (anime.year) { %> · <%= anime.year %><% } %> · <%= h.statusLabel(anime.status) %></p>
+  </div>
+</a>

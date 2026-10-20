@@ -1,0 +1,76 @@
+<%- include('../partials/admin-top') %>
+
+<div class="stat-grid">
+  <div class="stat"><div><strong><%= stats.anime %></strong><span>Anime</span></div></div>
+  <div class="stat"><div><strong><%= stats.episodes %></strong><span>Qism</span></div></div>
+  <div class="stat"><div><strong><%= h.formatNumber(stats.views) %></strong><span>Koʻrishlar</span></div></div>
+  <div class="stat"><div><strong><%= stats.admins %></strong><span>Admin</span></div></div>
+</div>
+
+<section class="admin-section">
+  <div class="section-head">
+    <h2>Animelar</h2>
+    <a class="btn btn-primary btn-sm" href="/admin/anime/new">Yangi anime</a>
+  </div>
+
+  <% if (!anime.length) { %>
+    <div class="empty">
+      <p>Hali anime qoʻshilmagan.</p>
+      <a class="btn btn-primary" href="/admin/anime/new">Birinchi animeni qoʻshish</a>
+    </div>
+  <% } else { %>
+    <div class="admin-anime-list">
+      <% anime.forEach((a) => { %>
+      <article class="admin-anime">
+        <img src="<%= h.posterUrl(a) %>" alt="">
+        <div class="admin-anime-body">
+          <h3><a href="/anime/<%= a.slug %>" target="_blank" rel="noopener"><%= a.title %></a></h3>
+          <p class="muted">
+            <%= h.typeLabel(a.type) %><% if (a.year) { %> · <%= a.year %><% } %> ·
+            <span class="status status-<%= a.status %>"><%= h.statusLabel(a.status) %></span>
+            <% if (a.featured) { %> · <span class="badge badge-hd">Bosh sahifada</span><% } %>
+          </p>
+          <div class="progress-row">
+            <div class="progress"><span style="width: <%= h.progressPercent(a) %>%"></span></div>
+            <small><%= h.episodeProgress(a) %> qism · <%= h.formatNumber(a.views) %> koʻrish</small>
+          </div>
+        </div>
+        <div class="admin-anime-actions">
+          <a class="btn btn-primary btn-sm" href="/admin/anime/<%= a.id %>/episodes">Qism joylash</a>
+          <a class="btn btn-ghost btn-sm" href="/admin/anime/<%= a.id %>/edit">Tahrirlash</a>
+          <form method="post" action="/admin/anime/<%= a.id %>/delete" data-confirm="“<%= a.title %>” va uning barcha qismlari butunlay oʻchirilsinmi?">
+            <button class="btn btn-danger btn-sm" type="submit">Oʻchirish</button>
+          </form>
+        </div>
+      </article>
+      <% }) %>
+    </div>
+  <% } %>
+</section>
+
+<% if (latest.length) { %>
+<section class="admin-section">
+  <div class="section-head"><h2>Soʻnggi joylangan qismlar</h2></div>
+  <div class="table-wrap">
+    <table class="table">
+      <thead><tr><th>Anime</th><th>Qism</th><th>Joylandi</th><th>Koʻrishlar</th><th></th></tr></thead>
+      <tbody>
+        <% latest.forEach((e) => { %>
+        <tr>
+          <td><%= e.anime_title %></td>
+          <td><%= h.episodeLabel(e, e.season_count > 1) %><% if (e.title) { %> <span class="muted">· <%= e.title %></span><% } %></td>
+          <td class="muted"><%= h.timeAgo(e.created_at) %></td>
+          <td><%= h.formatNumber(e.views) %></td>
+          <td class="actions">
+            <a class="icon-btn" href="<%= h.episodeUrl(e.slug, e) %>" target="_blank" rel="noopener" title="Koʻrish"><%- h.icon('play') %></a>
+            <a class="icon-btn" href="/admin/episodes/<%= e.id %>/edit" title="Tahrirlash"><%- h.icon('edit') %></a>
+          </td>
+        </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+</section>
+<% } %>
+
+<%- include('../partials/admin-bottom') %>

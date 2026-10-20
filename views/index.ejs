@@ -1,0 +1,70 @@
+<%- include('partials/head') %>
+<%- include('partials/header') %>
+
+<main>
+<% if (!anime.length) { %>
+  <section class="empty-hero">
+    <div class="container">
+      <%- include('partials/logo-mark', { size: 72 }) %>
+      <h1>Tez orada!</h1>
+      <p>Birinchi animelarimiz ustida ishlayapmiz. Oʻzbek tilidagi yangi qismlarni kuting.</p>
+      <% if (locals.admin) { %><a class="btn btn-primary btn-lg" href="/admin/anime/new">Birinchi animeni qoʻshish</a><% } %>
+    </div>
+  </section>
+<% } else { %>
+
+  <section class="hero" data-slider>
+    <% featured.forEach((a, i) => { %>
+    <article class="hero-slide <%= i === 0 ? 'is-active' : '' %>" data-slide>
+      <img class="hero-bg" src="<%= h.bannerUrl(a) %>" alt="">
+      <div class="container hero-content">
+        <div class="hero-text">
+          <span class="hero-kicker">Tavsiya etamiz</span>
+          <h1 class="hero-title"><%= a.title %></h1>
+          <% if (a.title_alt) { %><p class="hero-alt"><%= a.title_alt %></p><% } %>
+          <%- include('partials/badges', { anime: a }) %>
+          <% if (a.description) { %><p class="hero-desc"><%= a.description %></p><% } %>
+          <div class="hero-actions">
+            <% if (a.episode_count) { %>
+              <a class="btn btn-primary btn-lg" href="<%= h.episodeUrl(a.slug, { season: a.first_season, number: a.first_episode }) %>"><%- h.icon('play') %> Tomosha qilish</a>
+            <% } %>
+            <a class="btn btn-ghost btn-lg" href="/anime/<%= a.slug %>">Batafsil</a>
+          </div>
+        </div>
+        <a class="hero-poster" href="/anime/<%= a.slug %>" tabindex="-1">
+          <img src="<%= h.posterUrl(a) %>" alt="<%= a.title %>">
+        </a>
+      </div>
+    </article>
+    <% }) %>
+    <% if (featured.length > 1) { %>
+    <div class="container hero-controls">
+      <div class="hero-dots">
+        <% featured.forEach((a, i) => { %><button type="button" class="<%= i === 0 ? 'is-active' : '' %>" data-slide-to="<%= i %>" aria-label="<%= i + 1 %>-slayd"></button><% }) %>
+      </div>
+      <div class="hero-arrows">
+        <button type="button" class="icon-btn" data-slide-prev aria-label="Oldingi"><%- h.icon('chevron-left') %></button>
+        <button type="button" class="icon-btn" data-slide-next aria-label="Keyingi"><%- h.icon('chevron-right') %></button>
+      </div>
+    </div>
+    <% } %>
+  </section>
+
+  <div class="container page-grid">
+    <div class="main-col">
+      <section class="section">
+        <div class="section-head">
+          <h2>Animelarimiz <span class="count"><%= anime.length %></span></h2>
+        </div>
+        <div class="card-grid card-grid-lg">
+          <% anime.forEach((a) => { %><%- include('partials/anime-card', { anime: a }) %><% }) %>
+        </div>
+      </section>
+    </div>
+
+    <%- include('partials/sidebar') %>
+  </div>
+<% } %>
+</main>
+
+<%- include('partials/footer') %>

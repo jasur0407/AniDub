@@ -1,0 +1,31 @@
+<%- include('../partials/admin-top') %>
+
+<form class="card form-card narrow-form" method="post" action="/admin/settings">
+  <h2>Asosiy rang</h2>
+  <p class="muted">Tugmalar, belgilar va havolalar uchun rang. Rangni tanlang — sahifa darhol shu rangda koʻrinadi. Saqlaganingizdan soʻng butun saytga qoʻllanadi.</p>
+
+  <div class="swatches" data-accent-picker>
+    <% accents.forEach((a) => { %>
+      <label class="swatch">
+        <input type="radio" name="accent" value="<%= a.key %>" <%= a.key === current ? 'checked' : '' %>>
+        <span class="swatch-color" style="background: <%= a.color %>"></span>
+        <span class="swatch-label"><%= a.label %></span>
+        <code><%= a.color %></code>
+      </label>
+    <% }) %>
+  </div>
+
+  <div class="accent-preview">
+    <span class="muted small">Namuna:</span>
+    <span class="btn btn-primary btn-sm">Tomosha qilish</span>
+    <span class="badge badge-dub">UZ</span>
+    <span class="poster-badge-inline">5-qism</span>
+    <a href="#" class="link-accent">Barcha qismlar</a>
+  </div>
+
+  <div class="form-actions">
+    <button class="btn btn-primary" type="submit">Saqlash</button>
+  </div>
+</form>
+
+<%- include('../partials/admin-bottom') %>

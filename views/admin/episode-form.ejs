@@ -1,0 +1,14 @@
+<%- include('../partials/admin-top') %>
+
+<form class="card form-card admin-form narrow-form" method="post" enctype="multipart/form-data"
+      action="/admin/episodes/<%= episode.id %>/edit" data-upload-form>
+  <h2><%= anime.title %> — <%= h.episodeLabel(episode, true) %>ni tahrirlash</h2>
+  <%- include('../partials/episode-fields', { episode }) %>
+  <div class="form-actions">
+    <a class="btn btn-ghost" href="/admin/anime/<%= anime.id %>/episodes">Bekor qilish</a>
+    <button class="btn btn-primary" type="submit">Saqlash</button>
+  </div>
+  <div class="upload-progress" data-progress hidden><div class="progress"><span data-progress-bar></span></div><small data-progress-text></small></div>
+</form>
+
+<%- include('../partials/admin-bottom') %>

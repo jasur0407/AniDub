@@ -1,0 +1,37 @@
+<%- include('partials/head') %>
+<%- include('partials/header') %>
+
+<main class="container page-grid page-pad">
+  <div class="main-col">
+    <div class="page-head">
+      <h1>Yangi qismlar</h1>
+      <p class="muted">Oʻzbek tilida joylangan barcha qismlar — eng yangilari birinchi</p>
+    </div>
+
+    <% if (!groups.length) { %>
+      <div class="empty">Hali qismlar joylanmagan. Tez orada!</div>
+    <% } %>
+
+    <% groups.forEach((group) => { %>
+    <section class="day-group">
+      <h2 class="day-title"><%= group.label %> <span class="count"><%= group.episodes.length %></span></h2>
+      <div class="card-grid">
+        <% group.episodes.forEach((ep) => { %><%- include('partials/episode-card', { ep }) %><% }) %>
+      </div>
+    </section>
+    <% }) %>
+
+    <% if (pages > 1) { %>
+    <nav class="pagination" aria-label="Sahifalar">
+      <% if (page > 1) { %><a class="icon-btn" href="?page=<%= page - 1 %>" aria-label="Oldingi"><%- h.icon('chevron-left') %></a><% } %>
+      <% for (let p = 1; p <= pages; p++) { %>
+        <a class="page-link <%= p === page ? 'is-active' : '' %>" href="?page=<%= p %>"><%= p %></a>
+      <% } %>
+      <% if (page < pages) { %><a class="icon-btn" href="?page=<%= page + 1 %>" aria-label="Keyingi"><%- h.icon('chevron-right') %></a><% } %>
+    </nav>
+    <% } %>
+  </div>
+  <%- include('partials/sidebar') %>
+</main>
+
+<%- include('partials/footer') %>

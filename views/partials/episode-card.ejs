@@ -1,0 +1,13 @@
+<a class="ep-card" href="<%= h.episodeUrl(ep.slug, ep) %>" data-watch-key="<%= ep.slug %>:<%= ep.season %>:<%= ep.number %>">
+  <div class="poster">
+    <img src="<%= h.posterUrl(ep) %>" alt="<%= ep.anime_title %>" loading="lazy">
+    <span class="poster-badge poster-badge-tl">UZ</span>
+    <span class="poster-badge poster-badge-ep"><%= h.episodeLabel(ep, ep.season_count > 1) %></span>
+    <span class="poster-play"><%- h.icon('play') %></span>
+    <span class="watched-tag">Koʻrilgan</span>
+  </div>
+  <div class="card-body">
+    <h3 class="card-title"><%= ep.anime_title %></h3>
+    <p class="card-meta"><%= ep.title || h.episodeLabel(ep, ep.season_count > 1) %> · <%= h.timeAgo(ep.created_at) %></p>
+  </div>
+</a>

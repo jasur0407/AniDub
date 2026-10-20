@@ -1,0 +1,79 @@
+<%- include('../partials/admin-top') %>
+
+<div class="admin-anime admin-anime-head">
+  <img src="<%= h.posterUrl(anime) %>" alt="">
+  <div class="admin-anime-body">
+    <h3><%= anime.title %></h3>
+    <p class="muted"><%= h.typeLabel(anime.type) %> · <%= h.statusLabel(anime.status) %> · <%= h.episodeProgress(anime) %> qism</p>
+  </div>
+  <div class="admin-anime-actions">
+    <a class="btn btn-ghost btn-sm" href="/anime/<%= anime.slug %>" target="_blank" rel="noopener">Saytda</a>
+    <a class="btn btn-ghost btn-sm" href="/admin/anime/<%= anime.id %>/edit">Tahrirlash</a>
+  </div>
+</div>
+
+<div class="form-grid episodes-layout">
+  <form class="card form-card admin-form" method="post" enctype="multipart/form-data"
+        action="/admin/anime/<%= anime.id %>/episodes" data-upload-form>
+    <h2>Yangi qism joylash</h2>
+    <%- include('../partials/episode-fields', { episode: null }) %>
+    <div class="form-actions">
+      <button class="btn btn-primary btn-block" type="submit">Qismni joylash</button>
+    </div>
+    <div class="upload-progress" data-progress hidden><div class="progress"><span data-progress-bar></span></div><small data-progress-text></small></div>
+  </form>
+
+  <section class="card form-card">
+    <div class="card-head">
+      <h2>Joylangan qismlar <span class="count"><%= episodes.length %></span></h2>
+      <% if (seasons.length > 1) { %>
+        <select class="select-sm" data-season-filter aria-label="Fasl boʻyicha filtr">
+          <option value="">Barcha fasllar</option>
+          <% seasons.forEach(({ season, episodes }) => { %><option value="<%= season %>"><%= h.seasonLabel(season) %> (<%= episodes %>)</option><% }) %>
+        </select>
+      <% } %>
+    </div>
+    <% if (!episodes.length) { %>
+      <div class="empty">Hali qism joylanmagan. Chap tomondagi forma orqali birinchi qismni yuklang.</div>
+    <% } else { %>
+      <div class="table-wrap" data-status-url="/admin/anime/<%= anime.id %>/episodes/status">
+        <table class="table">
+          <thead><tr><th>Fasl</th><th>#</th><th>Nomi</th><th>Manba</th><th>Joylandi</th><th>Koʻrishlar</th><th></th></tr></thead>
+          <tbody>
+            <% episodes.slice().reverse().forEach((e) => { %>
+            <tr data-season-row="<%= e.season %>">
+              <td class="muted"><%= h.seasonLabel(e.season) %></td>
+              <td><span class="episode-num"><%= e.number %></span></td>
+              <td>
+                <%= e.title || h.episodeLabel(e) %>
+                <% if (e.status === 'failed' && e.error) { %><div class="error-text"><%= e.error %></div><% } %>
+              </td>
+              <td class="nowrap">
+                <span class="badge badge-source"><%= { file: 'Fayl', url: 'Havola', embed: 'Embed' }[e.source_type] %></span>
+                <% if (e.status === 'processing') { %>
+                  <span class="badge badge-processing" data-episode-status="<%= e.id %>">Konvertatsiya <%= e.progress %>%</span>
+                <% } else if (e.status === 'failed') { %>
+                  <span class="badge badge-failed">Xato</span>
+                <% } %>
+              </td>
+              <td class="muted"><%= h.timeAgo(e.created_at) %></td>
+              <td><%= h.formatNumber(e.views) %></td>
+              <td class="actions">
+                <% if (e.status === 'ready') { %>
+                <a class="icon-btn" href="<%= h.episodeUrl(anime.slug, e) %>" target="_blank" rel="noopener" title="Koʻrish"><%- h.icon('play') %></a>
+                <% } %>
+                <a class="icon-btn" href="/admin/episodes/<%= e.id %>/edit" title="Tahrirlash"><%- h.icon('edit') %></a>
+                <form method="post" action="/admin/episodes/<%= e.id %>/delete" data-confirm="<%= h.episodeLabel(e, true) %> oʻchirilsinmi?">
+                  <button class="icon-btn icon-btn-danger" type="submit" title="Oʻchirish"><%- h.icon('trash') %></button>
+                </form>
+              </td>
+            </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    <% } %>
+  </section>
+</div>
+
+<%- include('../partials/admin-bottom') %>

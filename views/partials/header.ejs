@@ -1,0 +1,19 @@
+<header class="site-header">
+  <div class="container header-inner">
+    <a href="/" class="logo" aria-label="UzAniDub bosh sahifa">
+      <%- include('brand', { size: 34 }) %>
+    </a>
+
+    <nav class="main-nav">
+      <a href="/" class="<%= currentPath === '/' ? 'active' : '' %>">Bosh sahifa</a>
+      <a href="/yangi-qismlar" class="<%= currentPath === '/yangi-qismlar' ? 'active' : '' %>">Yangi qismlar</a>
+    </nav>
+
+    <% if (locals.admin) { %>
+      <a href="/admin" class="btn btn-sm btn-primary header-admin">Admin</a>
+    <% } %>
+  </div>
+</header>
+<% if (locals.flash) { %>
+  <div class="container"><div class="alert alert-<%= flash.type %>" data-flash><%= flash.text %></div></div>
+<% } %>
